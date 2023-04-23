@@ -23,14 +23,19 @@ const DragAndDropInput = ({ onFileChange }) => {
   return (
     <Box
       sx={{
-        display: "flex",
+        display:'flex',
+        flexGrow:1,
         justifyContent: "center",
         alignItems: "center",
-        height: "200px",
+        height: "150px",
+        width:"100%",
         border: "2px dashed grey",
         borderRadius: "4px",
         cursor: "pointer",
-        bgcolor:"whitesmoke"
+        bgcolor:"whitesmoke",
+        '&:hover': {
+          border: `2px dashed black`,
+        },
       }}
       onClick={handleClick}
       onDrop={handleDrop}

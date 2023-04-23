@@ -33,13 +33,9 @@ def process_pdf():
 
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         texts = text_splitter.split_documents(documents)
-        # select which embeddings we want to use
         embeddings = OpenAIEmbeddings(openai_api_key="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")
-        # create the vectorestore to use as the index
         db = Chroma.from_documents(texts, embeddings)
-        # expose this index in a retriever interface
         retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":1})
-        # create a chain to answer questions 
         qa = RetrievalQA.from_chain_type(
             llm=OpenAI(openai_api_key="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"), chain_type="stuff", retriever=retriever, return_source_documents=True)
         return jsonify({"message": "Successfully Uploaded"})

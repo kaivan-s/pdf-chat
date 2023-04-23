@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { auth } from "./firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../Firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -13,7 +13,7 @@ import {
   Grid,
 } from "@mui/material";
 
-function Register() {
+function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/');
     } catch (err) {
       setError(err.message);
@@ -40,7 +40,7 @@ function Register() {
       >
         <Paper elevation={3} style={{ padding: "2rem", borderRadius: "15px" }}>
           <Typography variant="h4" align="center">
-            Register
+            Login
           </Typography>
           <form onSubmit={handleSubmit}>
             <Box mt={2}>
@@ -69,29 +69,29 @@ function Register() {
                 variant="contained"
                 color="primary"
               >
-                Register
+                Login
               </Button>
             </Box>
           </form>
-          {error && (
-            <Box mt={2}>
-              <Alert severity="error">{error}</Alert>
-            </Box>
-          )}
           <Box mt={2}>
             <Button
               fullWidth
               variant="contained"
               color="secondary"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/register")}
             >
-              Login
+              Register
             </Button>
           </Box>
+          {error && (
+            <Box mt={2}>
+              <Alert severity="error">{error}</Alert>
+            </Box>
+          )}
         </Paper>
       </Grid>
     </Container>
   );
 }
 
-export default Register;
+export default Login;
