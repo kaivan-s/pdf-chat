@@ -19,7 +19,6 @@ function Home() {
     const navigate = useNavigate();
     const [fileName, setFileName] = useState('');
     const [file, setFile] = useState('');
-    const [chatHistory, setChatHistory] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [uploadSuccess, setUploadSucess] = useState(null)
@@ -43,14 +42,6 @@ function Home() {
         scrollToBottom();
       }, []);
       
-
-    const handleRemoveFile = () => {
-        setFile(null);
-        setFileName('');
-        setUploadSucess(null);
-        setChatHistory([]);
-    };
-    
     const handleSubmit = async (uploadedFile, currentFileName) => {
         if (!uploadedFile) return;
     
@@ -84,34 +75,10 @@ function Home() {
               <Grid item xs={8} md={8}>
               <Paper elevation={3} sx={{ p: 2, bgcolor: '#cdcdd4', borderRadius: 2, width: '96.5%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <DragAndDropInput onFileChange={handleFileChange}/>
-                  {fileName && (
-                    <Typography variant="h6" component="p" sx={{ mt: 2, fontWeight:'bold' }}>
-                      {fileName}
-                    </Typography>
-                  )}
-                  {loading && (
-                    <Box width="100%" mt={2}><LinearProgress /></Box>
-                  )}
-                  {/* <Box display="flex">
-                    <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
-                      Process PDF
-                    </Button>
-                    {file && (
-                      <Button variant="contained" color="error" onClick={handleRemoveFile} sx={{ ml: 1 }}>
-                        Remove File
-                      </Button>
-                    )}
-                  </Box> */}
-                  {uploadSuccess && (
-                    <Box mt={2}>
-                      <Alert severity="success">PDF successfully uploaded and processed</Alert>
-                    </Box>
-                  )}
-                  {error && (
-                    <Box mt={2}>
-                      <Alert severity="error">Error processing PDF</Alert>
-                    </Box>
-                  )}
+                  {fileName && ( <Typography variant="h6" component="p" sx={{ mt: 2, fontWeight:'bold' }}>{fileName}</Typography>)}
+                  {loading && (<Box width="100%" mt={2}><LinearProgress /></Box>)}
+                  {uploadSuccess && ( <Box mt={2}> <Alert severity="success">PDF successfully uploaded and processed</Alert> </Box> )}
+                  {error && ( <Box mt={2}> <Alert severity="error">Error processing PDF</Alert> </Box>)}
                 </Paper>
               </Grid>
             </Grid>

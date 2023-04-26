@@ -84,21 +84,21 @@ function ChatPage() {
     <Box sx={{ width: '100vw', height: '100vh', overflow: 'hidden',  justifyContent:'right', marginTop:6 }}>
     <Grid container spacing={1} sx={{ height: '93%', display: 'flex', flexDirection: 'row' }}>
       <Grid item xs={2} sx={{ height: '100%', overflow: 'auto', marginTop:2 }}>
-          <Drawer variant="permanent" sx={{ width: '240px', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '240px',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
+          <Drawer variant="permanent" sx={{ width: '14vw', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '14vw',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
             <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', padding: 2, color:'white', bgcolor:'black' }}>Conversations</Typography>
-            <SidebarConversationList />
+            <SidebarConversationList key={fileName} />
           </Drawer>
       </Grid>
       <Grid item xs={showPdf ? 5 : 9.5} sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', p: 1 }}>
-          <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginRight:2, fontFamily:'TimesNewRoman' }}> View PDF : </Typography>
+          <Typography variant="h6" component="p" sx={{ display:'flex', fontWeight:'bold', color:'white', marginTop:0, marginLeft:2, marginRight:2, fontFamily:'TimesNewRoman' }}> View PDF : </Typography>
             <Tooltip title="Toggle PDF Viewer">
               <FormControlLabel control={ <Switch checked={showPdf} onChange={handleTogglePdf} name="showPdf" color="default" />}></FormControlLabel>
             </Tooltip>
           </Box>
-        <ChatBox fileName={fileName} />
+        <ChatBox key={fileName} fileName={fileName} />
       </Grid>
-      <Grid item xs={5} sx={{ width: "100%", height: '100%', overflow: 'auto', position: 'relative', display: 'flex', flexDirection: 'column'}}>
+      <Grid item xs={5} sx={{ width: "100%", height: '95vh', overflow: 'auto', position: 'relative', display: 'flex', flexDirection: 'column'}}>
         {showPdf && (
           <Box sx={{ width: '100%', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
             <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginBottom:2 }}> {fileName} </Typography>

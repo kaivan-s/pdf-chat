@@ -10,7 +10,8 @@ import {
   ListItemAvatar,
   Grid,
   IconButton,
-  Paper
+  Paper,
+  Typography
 } from '@mui/material';
 import { styled } from '@mui/system';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -36,6 +37,7 @@ function ChatBox({fileName}) {
   };
 
   useEffect(() => {
+    console.log("File Name prop changed")
     const fetchChatHistory = async () => {
       if (auth.currentUser) {
         const conversationsRef = collection(
