@@ -13,7 +13,7 @@ const Header = ({ user }) => {
   };
 
   return (
-    <AppBar position="static" sx = {{ backgroundColor:'transparent', boxShadow:'none'}}>
+    <AppBar position="fixed" sx = {{ backgroundColor:'transparent', boxShadow:'none', marginBottom:10}}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1,}}>
           <Link to="/" style={{ textDecoration: "none", color:"inherit" }}>PDF Chat</Link>

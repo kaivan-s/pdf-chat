@@ -1,16 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import ChatBox from './ChatBox';
 import { auth, storage } from '../Firebase/firebase';
+import ConversationList from '../Chat/ConversationList';
 import { ref, getDownloadURL } from 'firebase/storage';
-import { Document, Page } from '@react-pdf/renderer';
+import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import SidebarConversationList from './SideBarConversations';
+
 
 function ChatPage() {
   const { fileName } = useParams();
 
   const [pdfURL, setPdfURL] = useState("");
+  pdfjs.GlobalWorkerOptions.workerSrc =
+    `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
   const [numPages, setNumPages] = useState(null);
+  const [showPdf, setShowPdf] = useState(true);
+  const [scale, setScale] = useState(1);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const calculateScale = () => {
+      const availableWidth = window.innerWidth * 0.5; // Adjust this value based on your layout
+      const scaleFactor = availableWidth / 800; // Adjust this number based on your layout
+      setScale(scaleFactor);
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
 
   useEffect(() => {
     const userId = auth.currentUser.uid;
@@ -18,56 +44,76 @@ function ChatPage() {
     const fileRef = ref(storage, `pdfs/${userId}/${file}`);
     getDownloadURL(fileRef)
       .then((url) => {
-        setPdfURL(url);
+        const proxyUrl = `http://localhost:5001/pdf?url=${encodeURIComponent(url)}`;
+        setPdfURL(proxyUrl);
       })
       .catch((error) => {
         console.error("Error fetching PDF:", error);
       });
   }, [fileName]);
 
+  useEffect(() => {
+    const calculateScale = () => {
+      const availableHeight = window.innerHeight;
+      const scaleFactor = availableHeight / 1000; // Adjust this number based on your layout
+      setScale(scaleFactor);
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
+
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
 
+  const handleNextPage = () => {
+    if (currentPage < numPages) setCurrentPage(currentPage + 1);
+  };
+  
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleTogglePdf = () => {
+    setShowPdf(!showPdf);
+  };
+
   return (
-    <Box sx={{ my: 3, width: '100%', height: '100vh' }}>
-      <Grid container spacing={2}>
-        <Grid item xs={3} sx={{ height: '100%', overflow: 'hidden' }}>
-          <Typography
-            variant="h5"
-            component="h2"
-            color="white"
-            gutterBottom
-            sx={{ fontWeight: 'bold' }}
-          >
-            Processed File: {fileName}
-          </Typography>
-          <ChatBox fileName={fileName} />
-        </Grid>
-        <Grid item xs={9} sx={{ height: '100%', overflow: 'auto' }}>
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Document
-              file={pdfURL}
-              onLoadSuccess={onDocumentLoadSuccess}
-              loading={<div>Loading...</div>}
-            >
-              {Array.from(new Array(numPages), (_, index) => (
-                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-              ))}
-            </Document>
-          </Box>
-        </Grid>
+    <Box sx={{ width: '100vw', height: '100vh', overflow: 'hidden',  justifyContent:'right', marginTop:6 }}>
+    <Grid container spacing={1} sx={{ height: '93%', display: 'flex', flexDirection: 'row' }}>
+      <Grid item xs={2} sx={{ height: '100%', overflow: 'auto', marginTop:2 }}>
+          <Drawer variant="permanent" sx={{ width: '240px', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '240px',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
+            <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', padding: 2, color:'white', bgcolor:'black' }}>Conversations</Typography>
+            <SidebarConversationList />
+          </Drawer>
       </Grid>
-    </Box>
-  );
+      <Grid item xs={showPdf ? 5 : 9.5} sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', p: 1 }}>
+          <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginRight:2, fontFamily:'TimesNewRoman' }}> {fileName} </Typography>
+            <Tooltip title="Toggle PDF Viewer">
+              <FormControlLabel control={ <Switch checked={showPdf} onChange={handleTogglePdf} name="showPdf" color="default" />}></FormControlLabel>
+            </Tooltip>
+          </Box>
+        <ChatBox fileName={fileName} />
+      </Grid>
+      <Grid item xs={5} sx={{ width: "100%", height: '100%', overflow: 'auto', position: 'relative', display: 'flex', flexDirection: 'column'}}>
+        {showPdf && (
+          <Box sx={{ width: '100%', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
+            <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginBottom:2 }}> {fileName} </Typography>
+            <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess} loading={<Typography>Loading...</Typography>}> <Page pageNumber={currentPage} scale={scale} /></Document>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, width: '60%' }}>
+              <IconButton sx={{ fontSize: '1.5em', fontWeight:'bold' }} onClick={handlePreviousPage} disabled={currentPage === 1}><ArrowBackIcon /></IconButton>
+              <Typography sx={{ fontWeight: 'bold', fontFamily:'TimesNewRoman'}} fontSize="1.3em" >{`${currentPage} of ${numPages}`}</Typography>
+              <IconButton sx={{ fontSize: '1.5em', fontWeight:'bold' }} onClick={handleNextPage} disabled={currentPage === numPages}><ArrowForwardIcon /></IconButton>
+            </Box>
+          </Box>
+        )}
+      </Grid>
+    </Grid>
+  </Box>
+);
 }
 
 export default ChatPage;

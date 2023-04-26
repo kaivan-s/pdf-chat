@@ -132,6 +132,7 @@ function ChatBox({fileName}) {
         sender: message.type,
         timestamp: new Date().getTime()
       });
+      console.log(new Date().getTime())
     } else {
       console.error('User not logged in');
     }
@@ -170,10 +171,10 @@ function ChatBox({fileName}) {
   };
 
   return (
-    <Grid item xs={12} md={10} mt={2}>
-      <Paper elevation={3} sx={{p:3, width:'100%',height:'100%', borderRadius:3, bgcolor:'lightgray'}}>
-        <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, maxHeight: 400, overflow: 'auto'}}>
-          <List>
+    <Grid item xs={12} md={12} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems:'flex-end'}}>
+    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '80vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
+      <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), bgcolor:'#FAF9F6' }}>
+        <List>
             {chatHistory.map((message, index) => (
               <ListItem key={index} alignItems="flex-start" sx={{ flexDirection: message.type === 'user' ? 'row-reverse' : 'row' }}>
                 <ListItemAvatar>
@@ -194,9 +195,9 @@ function ChatBox({fileName}) {
             )}
           </List>
         </Paper>
-        <Box mt={2} display="flex" alignItems="flex-end">
+        <Box mt={3} display="flex" alignItems="flex-end">
           <TextField fullWidth label="Type your message" value={newMessage} onChange={handleNewMessageChange} variant="outlined" sx={{ mr: 1 }} />
-          <IconButton color="primary" onClick={handleSendMessage}><SendIcon /></IconButton>
+          <IconButton color="default" onClick={handleSendMessage}><SendIcon /></IconButton>
         </Box>
       </Paper>
     </Grid>

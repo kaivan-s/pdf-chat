@@ -5,49 +5,15 @@ import { Avatar, Container, Divider, List, ListItem, ListItemAvatar, ListItemTex
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import useConversations from './UseConversations';
 
 function ConversationList() {
 
   const navigate = useNavigate();  
-  const [conversations, setConversations] = useState([]);
+  let [conversations, setConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchConversations = async () => {
-      if (auth.currentUser) {
-        const conversationsRef = collection(db, 'users', auth.currentUser.uid, 'conversations');
-        const conversationsSnapshot = await getDocs(conversationsRef);
-        const conversationsData = conversationsSnapshot.docs.map(doc => {
-          return { id: doc.id, fileName: doc.data().fileName };
-        });
-  
-        const conversationsWithLatestMessage = [];
-        for (const conversation of conversationsData) {
-          const messagesRef = collection(conversationsRef, conversation.id, 'messages');
-          const q = query(messagesRef, orderBy('timestamp', 'desc'), limit(1));
-          const lastMessageSnapshot = await getDocs(q);
-          const lastMessage = lastMessageSnapshot.docs[0].data();
-  
-          conversationsWithLatestMessage.push({
-            id: conversation.id,
-            fileName: conversation.fileName,
-            latestMessage: {
-              text: lastMessage.text,
-              sender: lastMessage.sender,
-              timestamp: lastMessage.timestamp,
-            },
-          });
-        }
-        const sortedConversations = conversationsWithLatestMessage.sort((a, b) => {
-            return b.latestMessage.timestamp.getTime() - a.latestMessage.timestamp.getTime();
-          });
-        setConversations(sortedConversations);
-      }
-    };
-  
-    fetchConversations();
-  }, [auth.currentUser]);
+  conversations = useConversations();
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
