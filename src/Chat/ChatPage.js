@@ -91,7 +91,7 @@ function ChatPage() {
       </Grid>
       <Grid item xs={showPdf ? 5 : 9.5} sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', p: 1 }}>
-          <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginRight:2, fontFamily:'TimesNewRoman' }}> {fileName} </Typography>
+          <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginRight:2, fontFamily:'TimesNewRoman' }}> View PDF : </Typography>
             <Tooltip title="Toggle PDF Viewer">
               <FormControlLabel control={ <Switch checked={showPdf} onChange={handleTogglePdf} name="showPdf" color="default" />}></FormControlLabel>
             </Tooltip>
@@ -102,7 +102,7 @@ function ChatPage() {
         {showPdf && (
           <Box sx={{ width: '100%', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
             <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginBottom:2 }}> {fileName} </Typography>
-            <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess} loading={<Typography>Loading...</Typography>}> <Page pageNumber={currentPage} scale={scale} /></Document>
+            <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess} loading={<Typography sx={{color:'white'}}>Loading...</Typography>}> <Page pageNumber={currentPage} scale={scale} /></Document>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2, width: '60%' }}>
               <IconButton sx={{ fontSize: '1.5em', fontWeight:'bold' }} onClick={handlePreviousPage} disabled={currentPage === 1}><ArrowBackIcon /></IconButton>
               <Typography sx={{ fontWeight: 'bold', fontFamily:'TimesNewRoman'}} fontSize="1.3em" >{`${currentPage} of ${numPages}`}</Typography>
