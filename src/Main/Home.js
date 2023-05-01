@@ -76,7 +76,7 @@ function Home() {
               <Paper elevation={3} sx={{ p: 2, bgcolor: '#cdcdd4', borderRadius: 2, width: '96.5%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <DragAndDropInput onFileChange={handleFileChange}/>
                   {fileName && ( <Typography variant="h6" component="p" sx={{ mt: 2, fontWeight:'bold' }}>{fileName}</Typography>)}
-                  {loading && (<Box width="100%" mt={2}><LinearProgress /></Box>)}
+                  {loading && (<Box width="100%" mt={2}><LinearProgress color='inherit'/></Box>)}
                   {uploadSuccess && ( <Box mt={2}> <Alert severity="success">PDF successfully uploaded and processed</Alert> </Box> )}
                   {error && ( <Box mt={2}> <Alert severity="error">Error processing PDF</Alert> </Box>)}
                 </Paper>

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Grid, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Grid, Typography, IconButton, Drawer } from '@mui/material';
 import ChatBox from './ChatBox';
 import { auth, storage } from '../Firebase/firebase';
-import ConversationList from '../Chat/ConversationList';
 import { ref, getDownloadURL } from 'firebase/storage';
 import { Document, Page, pdfjs } from 'react-pdf/dist/esm/entry.webpack';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -23,6 +22,7 @@ function ChatPage() {
   const [numPages, setNumPages] = useState(null);
   const [showPdf, setShowPdf] = useState(true);
   const [scale, setScale] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -83,15 +83,15 @@ function ChatPage() {
   return (
     <Box sx={{ width: '100vw', height: '100vh', overflow: 'hidden',  justifyContent:'right', marginTop:6 }}>
     <Grid container spacing={1} sx={{ height: '93%', display: 'flex', flexDirection: 'row' }}>
-      <Grid item xs={2} sx={{ height: '100%', overflow: 'auto', marginTop:2 }}>
-          <Drawer variant="permanent" sx={{ width: '14vw', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '14vw',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
+      <Grid item xs={2} sx={{ overflow: 'auto' }}>
+          <Drawer variant="permanent" sx={{ marginTop:2, width: '14vw', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '14vw',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
             <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', padding: 2, color:'white', bgcolor:'black' }}>Conversations</Typography>
             <SidebarConversationList key={fileName} />
           </Drawer>
       </Grid>
       <Grid item xs={showPdf ? 5 : 9.5} sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', p: 1 }}>
-          <Typography variant="h6" component="p" sx={{ display:'flex', fontWeight:'bold', color:'white', marginTop:0, marginLeft:2, marginRight:2, fontFamily:'TimesNewRoman' }}> View PDF : </Typography>
+          <Typography variant="h6" component="p" sx={{ display:'flex-start', fontWeight:'bold', color:'white', marginTop:0, marginLeft:2, marginRight:2, fontFamily:'TimesNewRoman' }}> View PDF : </Typography>
             <Tooltip title="Toggle PDF Viewer">
               <FormControlLabel control={ <Switch checked={showPdf} onChange={handleTogglePdf} name="showPdf" color="default" />}></FormControlLabel>
             </Tooltip>

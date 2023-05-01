@@ -5,11 +5,14 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const Header = ({ user }) => {
 
+  const navigate = useNavigate()
   const handleLogout = () => {
     auth.signOut();
+    navigate("/")
   };
 
   return (
@@ -20,9 +23,7 @@ const Header = ({ user }) => {
         </Typography>
         <nav>
           {user ? (
-            <Button color="inherit" onClick={handleLogout}>Logout</Button>
-          ) : (
-            <>
+            <Button color="inherit" onClick={handleLogout}>Logout</Button> ) : ( <>
               <Button color="inherit" component={Link} to="/login">Login</Button>
               <Button color="inherit" component={Link} to="/register">Register</Button>
             </>
