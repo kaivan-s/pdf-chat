@@ -26,7 +26,6 @@ function SidebarConversationList() {
   const filteredConversations = conversations.filter((conversation) =>
     conversation.fileName.toLowerCase().includes(search.toLowerCase())
   );
-
   
     const handleFileChange = (file) => {
       setUploadedFileName(file.name || '');
@@ -70,12 +69,15 @@ function SidebarConversationList() {
     };
 
   return (
-    <Box sx={{height:'93vh', overflowY:'auto', overflowX:'hidden', bgcolor:'lightgray', wordWrap:'break-word'}}>
-        <Box sx={{width:'13vw', marginTop:1, marginLeft:1}}> <DragAndDropInput onFileChange={handleFileChange} /></Box>
-      {uploadedFileName && (
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textAlign: 'center' }}> {uploadedFileName}</Typography>)}
-        {loading && (<Box width="100%" mt={2}><LinearProgress color='inherit'/></Box>)}
-        <Divider sx={{marginTop:1, marginBottom:1}} variant="middle"></Divider>
+    <Box sx={{height:'100vh', width:'14vw', flexDirection:'column', display:'flex', bgcolor:'lightgray'}}>
+      <Box sx={{padding:1}}>
+          <Box sx={{width:'13vw', marginTop:1}}> <DragAndDropInput onFileChange={handleFileChange} /></Box>
+          {uploadedFileName && (
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textAlign: 'center' }}> {uploadedFileName}</Typography>)}
+            {loading && (<Box width="100%" mt={2}><LinearProgress color='inherit'/></Box>)}
+            <Divider sx={{marginTop:1, marginBottom:1}} variant="middle"></Divider>
+      </Box>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', overflowX: 'hidden', wordWrap: 'break-word', borderRadius:3 }}>
         <TextField variant="outlined" size="small" label="Search PDFs" value={search} onChange={handleSearchChange} sx={{ marginLeft:1, width: '94.5%', marginBottom: 1 }}/>
       {filteredConversations.map((conversation) => (
         <Box
@@ -88,6 +90,10 @@ function SidebarConversationList() {
           </Typography>
         </Box>
       ))}
+      </Box>
+      <Box sx={{padding:3.25, bgcolor:"black"}}>
+
+      </Box>
     </Box>
   );
 }

@@ -11,8 +11,9 @@ import {
   Grid,
   IconButton,
   Paper,
-  Typography
+  Tooltip
 } from '@mui/material';
+import { jsPDF } from 'jspdf';
 import { styled } from '@mui/system';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import RobotIcon from '@mui/icons-material/EmojiObjects';
@@ -20,11 +21,16 @@ import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material';
 import { db, auth } from '../Firebase/firebase'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-import { getDocs, where, limit, collection, addDoc, query, Timestamp } from 'firebase/firestore';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import DeleteIcon from '@mui/icons-material/Delete';
+import deleteChat from '../Utilities/DeleteConversation'
+import { getDocs, where, limit, collection, addDoc, query } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 function ChatBox({fileName}) {
 
   const theme = useTheme();
+  const navigate = useNavigate();
   const [newMessage, setNewMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [backendTyping, setBackendTyping] = useState(false);
@@ -37,7 +43,6 @@ function ChatBox({fileName}) {
   };
 
   useEffect(() => {
-    console.log("File Name prop changed")
     const fetchChatHistory = async () => {
       if (auth.currentUser) {
         const conversationsRef = collection(
@@ -100,6 +105,31 @@ function ChatBox({fileName}) {
     wordWrap: 'break-word',
   }));
 
+  const handleDownloadChat = () => {
+    const doc = new jsPDF({ format: 'a4', unit: 'mm',});
+  
+    const pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
+    const paddingLeft = 10;
+    const paddingRight = 10;
+    const maxWidth = pageWidth - paddingLeft - paddingRight;
+  
+    const chatData = chatHistory.map(
+      (message) =>
+        `[${message.type === 'user' ? 'User' : 'GPT-4'}] ${message.text}`
+    );
+  
+    let yOffset = 10;
+  
+    chatData.forEach((line) => {
+      const wrappedText = doc.splitTextToSize(line, maxWidth);
+      doc.text(wrappedText, paddingLeft, yOffset);
+      yOffset += wrappedText.length * 7;
+    });
+  
+    doc.save(`${fileName}_chat.pdf`);
+  };
+  
+
   const TypingIndicator = styled(HourglassEmptyIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
     fontSize:'2rem',
@@ -128,13 +158,11 @@ function ChatBox({fileName}) {
       }
   
       const messagesRef = collection(conversationsRef, conversationId, 'messages');
-      console.log("Successfully stored")
       await addDoc(messagesRef, {
         text: message.text,
         sender: message.type,
         timestamp: new Date().getTime()
       });
-      console.log(new Date().getTime())
     } else {
       console.error('User not logged in');
     }
@@ -144,6 +172,17 @@ function ChatBox({fileName}) {
   const handleNewMessageChange = (e) => {
     setNewMessage(e.target.value);
   };
+
+  const handleDeleteChat = async () => {
+    const success = await deleteChat(fileName);
+  
+    if (success) {
+      navigate("/")
+    } else {
+      console.error("Error deleting chat");
+    }
+  };
+  
 
   const handleSendMessage = async () => {
     if (!newMessage) return;
@@ -158,7 +197,7 @@ function ChatBox({fileName}) {
     saveChatMessage(message);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage });
+      const response = await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_'), });
       const backendResponse = {
         type: 'backend',
         text: response.data.answer,
@@ -174,8 +213,16 @@ function ChatBox({fileName}) {
 
   return (
     <Grid item xs={12} md={12} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems:'flex-end'}}>
-    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '80vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
-      <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), bgcolor:'#FAF9F6' }}>
+    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '73vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
+      <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), bgcolor:'#FAF9F6', paddingTop:0 }}>
+      <Box display="flex" justifyContent="flex-end" sx={{marginTop:0}}>
+      <Tooltip title="Download Chat">
+        <IconButton color="default" onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
+      </Tooltip>
+      <Tooltip title="Delete Chat">
+        <IconButton color="default" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
+      </Tooltip>
+      </Box>
         <List>
             {chatHistory.map((message, index) => (
               <ListItem key={index} alignItems="flex-start" sx={{ flexDirection: message.type === 'user' ? 'row-reverse' : 'row' }}>

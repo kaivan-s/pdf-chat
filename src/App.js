@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Header from "./Header/header"
+import Footer from "./Footer/footer"
 import ChatPage from './Chat/ChatPage';
 
 function App() {
@@ -31,20 +32,29 @@ function App() {
   return (
     <Router>
       <Header user={user} />
-      <Routes>
-        {!user ? (
-          <>
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login setUser={setUser} />} />
-            <Route index element={<Login setUser={setUser} />} />
-          </>
-        ) : (
-          <>
-            <Route path="/chat/:fileName" element={<ChatPage/>}/>
-            <Route path="/" element={<Home />} />
-          </>
-        )}
-      </Routes>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh'
+        }}
+      >
+        <Routes>
+          {!user ? (
+            <>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login setUser={setUser} />} />
+              <Route index element={<Login setUser={setUser} />} />
+            </>
+          ) : (
+            <>
+              <Route path="/chat/:fileName" element={<ChatPage />} />
+              <Route path="/" element={<Home />} />
+            </>
+          )}
+        </Routes>
+        <Footer />
+      </Box>
     </Router>
   );
 }

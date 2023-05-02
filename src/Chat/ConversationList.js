@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { auth, db } from '../Firebase/firebase';
-import { collection, getDocs, limit, orderBy, query, doc, deleteDoc } from 'firebase/firestore';
-import { Avatar, Container, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography, Box, Paper, Grid, IconButton, TextField, InputAdornment, Collapse } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Container, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography, Box, Paper, Grid, IconButton, TextField, Collapse, Snackbar } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Alert } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import useConversations from './UseConversations';
+import deleteChat from '../Utilities/DeleteConversation';
 
 function ConversationList() {
 
@@ -13,7 +13,9 @@ function ConversationList() {
   let [conversations, setConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-  conversations = useConversations();
+  const [deletedConversationId, setDeletedConversationId] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  conversations = useConversations(deletedConversationId);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -23,22 +25,15 @@ function ConversationList() {
     setSearchBarOpen(!searchBarOpen);
   };
 
-  const handleDeleteConversation = async (conversationId) => {
+  const handleDeleteConversation = async (fileName) => {
     try {
-      // Delete all messages in the conversation
-      const messagesRef = collection(db, 'users', auth.currentUser.uid, 'conversations', conversationId, 'messages');
-      const messagesSnapshot = await getDocs(messagesRef);
-      
-      for (const messageDoc of messagesSnapshot.docs) {
-        await deleteDoc(doc(messagesRef, messageDoc.id));
+      const result = await deleteChat(fileName)
+      const conversationToDelete = conversations.find(conversation => conversation.fileName === fileName);
+      if(result) {
+        setConversations(conversations.filter(conversation => conversation.fileName !== fileName));
+        setDeletedConversationId(conversationToDelete.id);
+        setSnackbarOpen(true);
       }
-  
-      // Delete the conversation document
-      const conversationRef = doc(db, 'users', auth.currentUser.uid, 'conversations', conversationId);
-      await deleteDoc(conversationRef);
-  
-      // Update the UI
-      setConversations(conversations.filter(conversation => conversation.id !== conversationId));
     } catch (error) {
       console.error('Error deleting conversation:', error);
     }
@@ -59,14 +54,20 @@ function ConversationList() {
     const filteredConversations = conversations.filter((conversation) =>
         conversation.fileName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleSnackbarClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setSnackbarOpen(false);
+    };
   
   return (
+    <>{ conversations.length > 0 ? (
     <Container sx={{ paddingBottom:'1%', bgcolor:'lightgray', borderRadius:2}}>
     <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
-          <Typography variant="h5" padding={1} component="h5" gutterBottom display="flex" sx={{ fontWeight: 'bold', fontFamily: 'inherit' }}>
-            Previous Conversations
-          </Typography>
+          <Typography variant="h5" padding={1} component="h5" gutterBottom display="flex" sx={{ fontWeight: 'bold', fontFamily: 'inherit' }}>Previous Conversations</Typography>
         </Grid>
         <Grid item>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginBottom: 1 }}>
@@ -74,26 +75,14 @@ function ConversationList() {
               <SearchIcon />
             </IconButton>
             <Collapse in={searchBarOpen} timeout="auto" unmountOnExit>
-              <TextField
-                label="Search"
-                variant="outlined"
-                size="small"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                sx={{ width: '100%', transition: 'width 0.3s' }}
-              />
+              <TextField label="Search" variant="outlined" size="small" value={searchTerm} onChange={handleSearchChange} sx={{ width: '100%', transition: 'width 0.3s' }}/>
             </Collapse>
           </Box>
         </Grid>
       </Grid>
     <Box sx={{display: 'flex', flexDirection: 'row', overflowX: 'scroll', width: '100%', height: '100%'}}> {filteredConversations.map((conversation) => ( <Box key={conversation.id} component="span" marginRight={2}>
         <Paper elevation={3} sx={{ padding: 2, width: 250, height:200, background:"whitesmoke",transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                    transform: 'scale(1.05)',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-                    },
-                cursor: 'pointer',
-                borderRadius:2}}>
+                '&:hover': { transform: 'scale(1.05)', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', }, cursor: 'pointer', borderRadius:2}}>
           <Box sx={{height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
             <Box sx={{height: '100%', overflowY: 'auto',}}>
               <List>
@@ -109,15 +98,9 @@ function ConversationList() {
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 1, paddingBottom: 1,}}>
               <Typography variant="caption" color="text.secondary">GPT-4</Typography>
               <Typography variant="caption" color="text.secondary">
-                    {new Intl.DateTimeFormat('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    }).format(conversation.latestMessage.timestamp)}
+                    {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',}).format(conversation.latestMessage.timestamp)}
                 </Typography>
-              <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteConversation(conversation.id)}><DeleteIcon /></IconButton>
+              <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteConversation(conversation.fileName)}><DeleteIcon /></IconButton>
             </Box>
           </Box>
         </Paper>
@@ -125,7 +108,12 @@ function ConversationList() {
       ))} 
     </Box>
     </Container>
-    );
+    ) : (<Box></Box>)}
+    <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+        <Alert onClose={handleSnackbarClose} severity="success" variant="filled"> Chat deleted</Alert>
+    </Snackbar>
+    </>
+  );
 }
 
 export default ConversationList;

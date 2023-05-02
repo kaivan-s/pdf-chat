@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '../Firebase/firebase';
 import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 
-function useConversations() {
+function useConversations(deletedConversationId) {
   const [conversations, setConversations] = useState([]);
 
   useEffect(() => {
@@ -31,7 +31,6 @@ function useConversations() {
             },
           });
         }
-        console.log(conversationsWithLatestMessage)
         const sortedConversations = conversationsWithLatestMessage.sort((a, b) => {
             return b.latestMessage.timestamp.getTime() - a.latestMessage.timestamp.getTime();
           });
@@ -40,7 +39,7 @@ function useConversations() {
     };
   
     fetchConversations();
-  }, [auth.currentUser]);
+  }, [auth.currentUser, deletedConversationId]);
 
   return conversations;
 }
