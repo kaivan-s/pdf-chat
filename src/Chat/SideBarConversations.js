@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, storage } from '../Firebase/firebase'
 import { ref, uploadBytes } from 'firebase/storage';
-import { Box, Typography, Divider, LinearProgress, TextField } from '@mui/material';
+import { Box, Typography, Divider, LinearProgress, TextField, Container, Link } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import useConversations from './UseConversations';
 import DragAndDropInput from '../Chat/DragAndDropInput'
@@ -91,8 +91,10 @@ function SidebarConversationList() {
         </Box>
       ))}
       </Box>
-      <Box sx={{padding:3.25, bgcolor:"black"}}>
-
+      <Box sx={{padding:2.1, bgcolor:"black", display:'flex', justifyContent:'center', alignItems:'center'}}>
+        <Typography variant="subtitle" sx={{color:'White', fontFamily:'TimesNewRoman'}}>
+          <Link href="/" color="inherit" underline="hover"> Home Page</Link>{" "}
+        </Typography>
       </Box>
     </Box>
   );

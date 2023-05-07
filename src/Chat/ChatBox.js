@@ -1,18 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import {
-  Avatar,
-  Box,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Grid,
-  IconButton,
-  Paper,
-  Tooltip
-} from '@mui/material';
+import { Avatar, Box, TextField, List, ListItem, ListItemText, ListItemAvatar, Grid, IconButton, Paper, Tooltip } from '@mui/material';
 import { jsPDF } from 'jspdf';
 import { styled } from '@mui/system';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -26,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import deleteChat from '../Utilities/DeleteConversation'
 import { getDocs, where, limit, collection, addDoc, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import ChatBackground from '../Images/ChatBackground.jpeg'
 
 function ChatBox({fileName}) {
 
@@ -214,15 +203,16 @@ function ChatBox({fileName}) {
   return (
     <Grid item xs={12} md={12} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems:'flex-end'}}>
     <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '73vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
-      <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), bgcolor:'#FAF9F6', paddingTop:0 }}>
+      <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), paddingTop:0, 
+        backgroundImage: `url(${ChatBackground})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', }}>
       <Box display="flex" justifyContent="flex-end" sx={{marginTop:0}}>
-      <Tooltip title="Download Chat">
-        <IconButton color="default" onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete Chat">
-        <IconButton color="default" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
-      </Tooltip>
-      </Box>
+        <Tooltip title="Download Chat">
+          <IconButton color="default" onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete Chat">
+          <IconButton color="default" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
+        </Tooltip>
+        </Box>
         <List>
             {chatHistory.map((message, index) => (
               <ListItem key={index} alignItems="flex-start" sx={{ flexDirection: message.type === 'user' ? 'row-reverse' : 'row' }}>
