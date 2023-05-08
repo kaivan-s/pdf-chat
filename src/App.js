@@ -37,10 +37,7 @@ function App() {
   return (
     <Router>
       <Header user={user} />
-      <Box
-        sx={{ display: 'flex', flexDirection: 'column', height: '100vh',
-        }}
-      >
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Grid container spacing={2} sx={{ flexGrow: 1 }}>
           {!user || !user.emailVerified ? (
             <>

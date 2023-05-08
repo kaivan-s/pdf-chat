@@ -7,12 +7,15 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 import tempfile
+import traceback
+import urllib
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app)
 
 # Initialize the 'qa' object as a global variable
-qa = None
+qa = {}
 
 @app.route('/api/process-pdf', methods=['POST'])
 def process_pdf():
@@ -22,6 +25,9 @@ def process_pdf():
         return jsonify({"error": "No PDF file provided"}), 400
 
     file = request.files['pdf']
+    file_name = secure_filename(file.filename)
+
+    print(file_name)
 
     temp_file = tempfile.NamedTemporaryFile(delete=False)
     temp_file.write(file.read())
@@ -36,7 +42,7 @@ def process_pdf():
         embeddings = OpenAIEmbeddings(openai_api_key="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")
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever(search_type="similarity", search_kwargs={"k":1})
-        qa = RetrievalQA.from_chain_type(
+        qa[file_name] = RetrievalQA.from_chain_type(
             llm=OpenAI(openai_api_key="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"), chain_type="stuff", retriever=retriever, return_source_documents=True)
         return jsonify({"message": "Successfully Uploaded"})
 
@@ -47,14 +53,16 @@ def process_pdf():
 @app.route('/api/chat', methods=['POST'])
 def chat():
     global qa  # Declare the 'qa' object as global
+    print(qa)
 
     message = request.json.get('message')
+    file_name = request.json.get('backendFile')
     if not message:
         return jsonify({"error": "No message provided"}), 400
 
     try:
         # Process the message and get a response from the backend
-        result = qa({"query": message})
+        result = qa[file_name]({"query": message})
 
         # Convert the result to a JSON serializable format
         json_result = {
@@ -64,7 +72,28 @@ def chat():
         return json_result
     except Exception as e:
         print("Error processing message:", e)
+        print(traceback.format_exc())  # Add this line to print the traceback
+
         return jsonify({"error": "Error processing message"}), 500
+
+@app.route('/api/delete-conversation', methods=['POST'])
+def delete_conversation():
+    global qa  # Declare the 'qa' object as global
+
+    file_name = request.json.get('pdf_file')
+    if not file_name:
+        return jsonify({"error": "No file name provided"}), 400
+
+    try:
+        # Delete the corresponding key from the 'qa' object
+        del qa[file_name]
+        print(qa)
+        return jsonify({"message": f"Successfully deleted conversation for {file_name}"})
+    except KeyError:
+        return jsonify({"error": f"Conversation for {file_name} not found"}), 404
+    except Exception as e:
+        print("Error deleting conversation:", e)
+        return jsonify({"error": "Error deleting conversation"}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
