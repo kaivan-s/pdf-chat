@@ -98,7 +98,7 @@ function ChatPage() {
   };
 
   return (
-    <Box sx={{ width: '100vw', height: '100vh', overflow: 'hidden',  justifyContent:'right', marginTop:6 }}>
+    <Box sx={{ width: '100vw', height: '85vh', overflow: 'hidden',  justifyContent:'right', marginTop:6 }}>
     <Grid container spacing={1} sx={{ height: '93%', display: 'flex', flexDirection: 'row' }}>
       <Grid item xs={2} sx={{ overflow: 'auto' }}>
           <Drawer variant="permanent" sx={{ marginTop:2, width: '14vw', flexShrink: 0, [`& .MuiDrawer-paper`]: {width: '14vw',boxSizing: 'border-box'}, bgcolor:'lightgray', borderRadius:3}}>
@@ -115,7 +115,7 @@ function ChatPage() {
         <ChatBox key={fileName} fileName={fileName}/>
       </Grid>
         <Grid item xs={5} sx={{ width: "100%", height: '90vh', overflow: 'auto', position: 'relative', display: 'flex', flexDirection: 'column'}}>
-          <Box id="pdfContainer" sx={{ width: '100%', height:'90vh', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
+          <Box id="pdfContainer" sx={{ width: '100%', height:'100%', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
           {showPdf && (
             <Box sx={{ width: '100%', display:'flex', flexDirection:'column', alignItems:'center', borderRadius:3 }}>
               <Typography variant="h6" component="p" sx={{ fontWeight:'bold', color:'white', marginTop:0, marginBottom:2 }}> {fileName} </Typography>

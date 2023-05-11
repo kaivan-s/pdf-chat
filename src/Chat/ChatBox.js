@@ -80,7 +80,7 @@ function ChatBox({fileName}) {
 
   const MessageText = styled(ListItemText)(({ theme }) => ({
     '&[messagetype="user"]': {
-      backgroundColor: 'lightgray',
+      backgroundColor: 'darkgray',
       marginRight: theme.spacing(1)
     },
     '&[messagetype="backend"]': {
@@ -202,7 +202,7 @@ function ChatBox({fileName}) {
 
   return (
     <Grid item xs={12} md={12} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems:'flex-end'}}>
-    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '73vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
+    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '69vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
       <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), paddingTop:0, 
         backgroundImage: `url(${ChatBackground})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', }}>
       <Box display="flex" justifyContent="flex-end" sx={{marginTop:0}}>
