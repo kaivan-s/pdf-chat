@@ -132,7 +132,7 @@ const Header = ({ user }) => {
                           {/* <ArrowDropDownIcon onClick={handleScroll} style={{color: 'white', position: 'absolute', bottom: '35%', right: '5%'}}/> */}
                         </List>
                       </Box>
-                      <Button variant="contained" style={{marginTop: 20, color: 'black', backgroundColor: 'white', marginLeft:55}}>Buy</Button>
+                      <Button variant="contained" style={{marginTop: 20, color: 'black', backgroundColor: 'white', marginLeft:45}}>Buy ($5)</Button>
                       </Box>
                     </Grid>
                     <Grid item xs={false} sm={1} />
