@@ -69,7 +69,7 @@ function Home() {
     };
 
   return (
-    <Box sx={{minHeight:'95vh'}}>
+    <Box sx={{height:'87vh'}}>
       <Box sx={{ my: 10}}>
         <Grid container spacing={2} justifyContent="center">
           <Grid item xs={8} md={8}>
