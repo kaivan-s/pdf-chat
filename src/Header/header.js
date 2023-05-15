@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { auth } from "../Firebase/firebase";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -21,7 +21,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const Header = ({ user }) => {
   const navigate = useNavigate();
@@ -43,14 +42,6 @@ const Header = ({ user }) => {
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
-
-  // const handleScroll = () => {
-  //   if (scrollRef.current) {
-  //     const node = scrollRef.current;
-  //     node.scrollTop = scrollPos + 50; // adjust the scroll distance as needed
-  //     setScrollPos(node.scrollTop);
-  //   }
-  // };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

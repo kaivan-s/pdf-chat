@@ -36,7 +36,6 @@ function App() {
 
   return (
     <Router>
-      {/* <Header user={user} /> */}
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Grid container spacing={2} sx={{ flexGrow: 1 }}>
           {!user || !user.emailVerified ? (
@@ -58,7 +57,7 @@ function App() {
               <Grid item xs={12}>
                 <Routes>
                   <Route path="/chat/:fileName" element={<ChatPage />} />
-                  <Route path="/" element={<Home />} />
+                  <Route path="/" element={<Home user={user}/>} />
                 </Routes>
               </Grid>
             </>

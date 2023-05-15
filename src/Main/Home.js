@@ -12,9 +12,10 @@ import DragAndDropInput from '../Chat/DragAndDropInput';
 import { useNavigate } from 'react-router-dom';
 import ConversationList from '../Chat/ConversationList';
 import { ref, uploadBytes } from 'firebase/storage';
-import { storage, auth } from '../Firebase/firebase'
+import { storage, auth } from '../Firebase/firebase';
+import Header from "../Header/header";
 
-function Home() {
+function Home({user}) {
 
     const navigate = useNavigate();
     const [fileName, setFileName] = useState('');
@@ -69,6 +70,7 @@ function Home() {
     };
 
   return (
+    <><Header user={user}/>
     <Box sx={{height:'87vh'}}>
       <Box sx={{ my: 10}}>
         <Grid container spacing={2} justifyContent="center">
@@ -91,6 +93,7 @@ function Home() {
         </Grid>
       </Box>
     </Box>
+    </>
   );
 }
 
