@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Avatar, Box, TextField, List, ListItem, ListItemText, ListItemAvatar, Grid, IconButton, Paper, Tooltip } from '@mui/material';
+import { Avatar, Box, TextField, List, ListItem, ListItemText, ListItemAvatar, Grid, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import { jsPDF } from 'jspdf';
 import { styled } from '@mui/system';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import RobotIcon from '@mui/icons-material/EmojiObjects';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { db, auth } from '../Firebase/firebase'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import GetAppIcon from '@mui/icons-material/GetApp';
@@ -15,6 +16,7 @@ import deleteChat from '../Utilities/DeleteConversation'
 import { getDocs, where, limit, collection, addDoc, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import ChatBackground from '../Images/ChatBackground.jpeg'
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 function ChatBox({fileName}) {
 
@@ -78,10 +80,43 @@ function ChatBox({fileName}) {
     scrollToBottom();
   }, [chatHistory.length])
 
+  const boxTheme = createTheme({
+    palette: {
+      primary: {
+        main: 'rgb(255,255,255)' // replace with your desired color
+      },
+    },
+    components: {
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            "& fieldset": {
+              borderColor: "rgb(255,255,255)" // replace with your desired color
+            },
+            "&:hover fieldset": {
+              borderColor: "rgb(255,255,255)" // replace with your desired color
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "rgb(255,255,255)" // replace with your desired color
+            }
+          }
+        }
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: "rgb(255,255,255)" // replace with your desired color
+          }
+        }
+      }
+    }
+  });
+
   const MessageText = styled(ListItemText)(({ theme }) => ({
     '&[messagetype="user"]': {
-      backgroundColor: 'darkgray',
-      marginRight: theme.spacing(1)
+      backgroundColor: 'rgb(120,120,120)',
+      marginRight: theme.spacing(1),
+      color:'white'
     },
     '&[messagetype="backend"]': {
       backgroundColor: 'black',
@@ -200,27 +235,51 @@ function ChatBox({fileName}) {
     }
   };
 
+  const colorTheme = createTheme({
+    palette: {
+      primary: {
+        // Purple and green play nicely together.
+        main: "rgb(255,255,255)",
+      },
+      secondary: {
+        // This is green.A700 as hex.
+        main: 'rgb(60,60,60)',
+      },
+    },
+  });
+  
   return (
-    <Grid item xs={12} md={12} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, alignItems:'flex-end'}}>
-    <Paper elevation={3} sx={{ p: 3, width: '92.5%', height: '69vh', borderRadius: 3, bgcolor: 'lightgray', display: 'flex', flexDirection: 'column', paddingTop:1}}>
+    <Box style={{ height: '100%' }}>
+      <Paper elevation={3} sx={{ p: 3, height: '96.5vh', bgcolor: 'rgb(60,60,60)', display: 'flex', flexDirection: 'column', paddingTop:1}}>
+      <Box display="flex" justifyContent='space-between' sx={{marginTop:0, backgroundColor:'rgb(60,60,60)',}}>
+        <ThemeProvider theme={colorTheme}>
+          <Box sx={{margin:1.5}}>
+            <Typography variant="h6" color='primary'>{fileName}</Typography>
+          </Box>
+          <Box>
+            <Tooltip title="Download Chat">
+              <IconButton color="primary" size='large' onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete Chat">
+              <IconButton color="primary" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
+            </Tooltip>
+          </Box>
+        </ThemeProvider>
+      </Box>
       <Paper ref={chatBoxRef} elevation={3} sx={{ p: 3, flexGrow: 1, height: '100%', overflow: 'auto', marginBottom: theme.spacing(0), paddingTop:0, 
         backgroundImage: `url(${ChatBackground})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat', }}>
-      <Box display="flex" justifyContent="flex-end" sx={{marginTop:0}}>
-        <Tooltip title="Download Chat">
-          <IconButton color="default" onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete Chat">
-          <IconButton color="default" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
-        </Tooltip>
-        </Box>
         <List>
             {chatHistory.map((message, index) => (
               <ListItem key={index} alignItems="flex-start" sx={{ flexDirection: message.type === 'user' ? 'row-reverse' : 'row' }}>
                 <ListItemAvatar>
                   {message.type === 'user' ? (
-                    <Avatar><AccountCircleIcon /></Avatar>
+                    <ThemeProvider theme={colorTheme}>
+                      <Avatar sx={{bgcolor:'rgb(120,120,120)'}}><AccountCircleIcon color='primary'/></Avatar>
+                    </ThemeProvider>
                   ) : (
-                    <Avatar><RobotIcon /></Avatar>
+                    <ThemeProvider theme={colorTheme}>
+                      <Avatar sx={{bgcolor:'black'}}><SmartToyIcon color='primary'/></Avatar>
+                    </ThemeProvider>
                   )}
                 </ListItemAvatar>
                 <MessageText primary={message.text} messageType={message.type} />
@@ -228,18 +287,21 @@ function ChatBox({fileName}) {
             ))}
             {backendTyping && (
               <ListItem alignItems="flex-start" sx={{ flexDirection: 'row', marginRight:theme.spacing(1)}}>
-                {/* <Avatar><RobotIcon /></Avatar> */}
                 <TypingIndicator size={20} />
               </ListItem>
             )}
           </List>
         </Paper>
         <Box mt={3} display="flex" alignItems="flex-end">
-          <TextField fullWidth label="Type your message" value={newMessage} onChange={handleNewMessageChange} variant="outlined" sx={{ mr: 1 }} />
-          <IconButton color="default" onClick={handleSendMessage}><SendIcon /></IconButton>
+          <ThemeProvider theme={boxTheme}>
+            <TextField fullWidth label="Type your message" value={newMessage} onChange={handleNewMessageChange} variant="outlined" sx={{ mr: 1 }} />
+          </ThemeProvider>
+          <ThemeProvider theme={colorTheme}>
+            <IconButton color="primary" onClick={handleSendMessage}><SendIcon /></IconButton>
+          </ThemeProvider>
         </Box>
       </Paper>
-    </Grid>
+    </Box>
   );
 }
 

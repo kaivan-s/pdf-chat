@@ -69,9 +69,9 @@ function SidebarConversationList() {
     };
 
   return (
-    <Box sx={{height:'100vh', width:'14vw', flexDirection:'column', display:'flex', bgcolor:'lightgray'}}>
+    <Box sx={{height:'100vh', width:'16.7vw', flexDirection:'column', display:'flex', bgcolor:'lightgray'}}>
       <Box sx={{padding:1}}>
-          <Box sx={{width:'13vw', marginTop:1}}> <DragAndDropInput onFileChange={handleFileChange} /></Box>
+          <Box sx={{marginTop:1}}> <DragAndDropInput onFileChange={handleFileChange} /></Box>
           {uploadedFileName && (
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', textAlign: 'center' }}> {uploadedFileName}</Typography>)}
             {loading && (<Box width="100%" mt={2}><LinearProgress color='inherit'/></Box>)}

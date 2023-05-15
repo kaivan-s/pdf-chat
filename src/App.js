@@ -36,7 +36,7 @@ function App() {
 
   return (
     <Router>
-      <Header user={user} />
+      {/* <Header user={user} /> */}
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Grid container spacing={2} sx={{ flexGrow: 1 }}>
           {!user || !user.emailVerified ? (
@@ -64,7 +64,7 @@ function App() {
             </>
           )}
         </Grid>
-        <Footer />
+        {/* <Footer /> */}
       </Box>
     </Router>
   );
