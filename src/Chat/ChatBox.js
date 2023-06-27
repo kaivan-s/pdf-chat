@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Avatar, Box, TextField, List, ListItem, ListItemText, ListItemAvatar, Grid, IconButton, Paper, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, TextField, List, ListItem, ListItemText, ListItemAvatar, IconButton, Paper, Tooltip, Typography } from '@mui/material';
 import { jsPDF } from 'jspdf';
 import { styled } from '@mui/system';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import RobotIcon from '@mui/icons-material/EmojiObjects';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -258,10 +257,10 @@ function ChatBox({fileName}) {
           </Box>
           <Box>
             <Tooltip title="Download Chat">
-              <IconButton color="primary" size='large' onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
+              <IconButton color="primary" fontSize='large' onClick={handleDownloadChat}> <GetAppIcon /> </IconButton>
             </Tooltip>
             <Tooltip title="Delete Chat">
-              <IconButton color="primary" onClick={handleDeleteChat}><DeleteIcon /></IconButton>
+              <IconButton color="primary" fontSize='large' onClick={handleDeleteChat}><DeleteIcon /></IconButton>
             </Tooltip>
           </Box>
         </ThemeProvider>
@@ -294,7 +293,8 @@ function ChatBox({fileName}) {
         </Paper>
         <Box mt={3} display="flex" alignItems="flex-end">
           <ThemeProvider theme={boxTheme}>
-            <TextField fullWidth label="Type your message" value={newMessage} onChange={handleNewMessageChange} variant="outlined" sx={{ mr: 1 }} />
+            <TextField fullWidth  color="primary" label="Type your message" value={newMessage} onChange={handleNewMessageChange} variant="outlined" sx={{ mr: 1 }} 
+            InputProps={{style: {color: "white" }}}/>
           </ThemeProvider>
           <ThemeProvider theme={colorTheme}>
             <IconButton color="primary" onClick={handleSendMessage}><SendIcon /></IconButton>

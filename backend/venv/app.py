@@ -10,12 +10,14 @@ import tempfile
 import traceback
 import urllib
 from werkzeug.utils import secure_filename
+import stripe
 
 app = Flask(__name__)
 CORS(app)
 
 # Initialize the 'qa' object as a global variable
 qa = {}
+stripe.api_key = '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'
 
 @app.route('/api/process-pdf', methods=['POST'])
 def process_pdf():
@@ -94,6 +96,20 @@ def delete_conversation():
     except Exception as e:
         print("Error deleting conversation:", e)
         return jsonify({"error": "Error deleting conversation"}), 500
+    
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    session = stripe.checkout.Session.create(
+      payment_method_types=['card'],
+      line_items=[{
+        'price': 'price_1NHnCTSDnmZGzrWBjwuIGk93',  # replace with the actual price ID from Stripe Dashboard
+        'quantity': 1,
+      }],
+      mode='subscription',
+      success_url='http://localhost:5000/',
+      cancel_url='http://localhost:5000/pricing',
+    )
 
+    return jsonify(id=session.id)
 if __name__ == "__main__":
     app.run(debug=True)

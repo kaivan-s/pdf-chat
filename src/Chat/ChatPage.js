@@ -102,7 +102,7 @@ function ChatPage() {
         <ChatBox key={fileName} fileName={fileName}/> 
       </Grid>
       <Grid item xs={12} sm={5}>
-      <Box sx={{ width:'100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  backgroundColor:'rgb(60,60,60)' }}>
+      <Box sx={{width:'100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  backgroundColor:'rgb(60,60,60)' }}>
             <ThemeProvider theme={colorTheme}>
                 <IconButton onClick={handleZoomOut}><ZoomOutIcon fontSize='large' color='primary'/></IconButton>
                 <Box sx={{flexDirection:'row', display:'flex', justifyContent:'center', alignItems:'center'}}>

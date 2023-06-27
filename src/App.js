@@ -8,9 +8,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import Header from "./Header/header";
-import Footer from "./Footer/footer";
 import ChatPage from './Chat/ChatPage';
+import Pricing from './Pricing/Pricing';
 import DocumentChat from './Images/DocumentChat.png'
 import ResendVerification from './Authentication/ResentVerification';
 
@@ -49,6 +48,7 @@ function App() {
                   <Route path="/login" element={<Login setUser={setUser} />} />
                   <Route path="/resend-verification" element={<ResendVerification />} />
                   <Route index element={<Login setUser={setUser} />} />
+                  <Route path="/pricing" element={<Pricing setUser={setUser} />} />
                 </Routes>
               </Grid>
             </>
@@ -58,6 +58,7 @@ function App() {
                 <Routes>
                   <Route path="/chat/:fileName" element={<ChatPage />} />
                   <Route path="/" element={<Home user={user}/>} />
+                  <Route path="/pricing" element={<Pricing setUser={setUser} />} />
                 </Routes>
               </Grid>
             </>
