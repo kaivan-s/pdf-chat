@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 import useConversations from './UseConversations';
 import deleteChat from '../Utilities/DeleteConversation';
+import moment from 'moment';
 
 function ConversationList() {
 
@@ -16,6 +17,8 @@ function ConversationList() {
   const [deletedConversationId, setDeletedConversationId] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   conversations = useConversations(deletedConversationId);
+
+  console.log(conversations)
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -98,7 +101,12 @@ function ConversationList() {
             <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 1, paddingBottom: 1,}}>
               <Typography variant="caption" color="text.secondary">GPT-4</Typography>
               <Typography variant="caption" color="text.secondary">
-                    {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',}).format(conversation.latestMessage.timestamp)}
+                {
+                  (() => {
+                    const date = moment(conversation.latestMessage.timestamp, 'MMMM DD, YYYY at hh:mm:ss A Z');
+                    return date.format('MMM DD, YYYY, hh:mm A');
+                  })()
+                }
                 </Typography>
               <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteConversation(conversation.fileName)}><DeleteIcon /></IconButton>
             </Box>

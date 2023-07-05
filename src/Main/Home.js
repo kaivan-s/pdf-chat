@@ -14,6 +14,7 @@ import ConversationList from '../Chat/ConversationList';
 import { ref, uploadBytes } from 'firebase/storage';
 import { storage, auth } from '../Firebase/firebase';
 import Header from "../Header/header";
+import { getUserSubscription } from '../Firebase/firebase';
 
 function Home({user}) {
 
@@ -29,6 +30,21 @@ function Home({user}) {
           chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
         }
       };
+
+      useEffect(() => {
+        async function protect() {
+            const user = auth.currentUser;
+            if (user) {
+                const isSubscribed = await getUserSubscription(user);
+                if (!isSubscribed) {
+                    navigate('/landing')
+                }
+            } else {
+                navigate('/login');
+            }
+        }
+        protect();
+    }, [navigate]);
     
     const handleFileChange = (file) => {
 

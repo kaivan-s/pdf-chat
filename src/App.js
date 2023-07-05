@@ -10,8 +10,10 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import ChatPage from './Chat/ChatPage';
 import Pricing from './Pricing/Pricing';
+import Account from './Account/Account';
 import DocumentChat from './Images/DocumentChat.png'
 import ResendVerification from './Authentication/ResentVerification';
+import { Dashboard } from './Dashboard/dashboard'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -37,7 +39,7 @@ function App() {
     <Router>
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <Grid container spacing={2} sx={{ flexGrow: 1 }}>
-          {!user || !user.emailVerified ? (
+          {(!user || (!user.emailVerified && user.isSubscribed)) ? (
             <>
               <Grid item xs={12} md={6} sx={{ backgroundColor: 'black' }}>
                 <LeftColumn />
@@ -57,8 +59,9 @@ function App() {
               <Grid item xs={12}>
                 <Routes>
                   <Route path="/chat/:fileName" element={<ChatPage />} />
-                  <Route path="/" element={<Home user={user}/>} />
+                  <Route path="/" element={<Home setUser={setUser} />} />
                   <Route path="/pricing" element={<Pricing setUser={setUser} />} />
+                  <Route path="/account" element={<Account setUser={setUser} />} />
                 </Routes>
               </Grid>
             </>

@@ -8,12 +8,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import LogoutIcon from '@mui/icons-material/Logout';
+import MoneyIcon from '@mui/icons-material/Money';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Box from '@mui/material/Box';
 
 const Header = ({ user }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [scrollPos, setScrollPos] = useState(0);
-  // const scrollRef = useRef(null);
   const open = Boolean(anchorEl);
 
   const handleLogout = () => {
@@ -23,6 +25,10 @@ const Header = ({ user }) => {
 
   const handlePricing = () => {
     navigate("/pricing")
+  }
+
+  const handleAccount = () => {
+    navigate("/account")
   }
 
   const handleClick = (event) => {
@@ -44,9 +50,9 @@ const Header = ({ user }) => {
                 <Avatar>{user.email.charAt(0).toUpperCase()}</Avatar>
               </IconButton>
               <Menu anchorEl={anchorEl} open={open} onClose={handleClose} onClick={handleClose}>
-                <MenuItem disabled>{user.email}</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                <MenuItem onClick={handlePricing}>Pricing</MenuItem>
+                <MenuItem onClick={handleAccount}><AccountCircleIcon /><Box ml={1}>Account</Box></MenuItem>
+                <MenuItem onClick={handleLogout}><LogoutIcon /><Box ml={1}>Logout</Box></MenuItem>
+                <MenuItem onClick={handlePricing}><MoneyIcon /><Box ml={1}>Pricing</Box></MenuItem>
               </Menu>
             </>
           ) : (

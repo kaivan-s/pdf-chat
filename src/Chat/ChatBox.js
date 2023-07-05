@@ -32,44 +32,31 @@ function ChatBox({fileName}) {
     }
   };
 
+  const fetchConversationMessages = async (uid, fileName) => {
+    try {
+      const idToken = await auth.currentUser.getIdToken(true);
+      const response = await axios.get('http://127.0.0.1:5000/api/conversations/messages', {
+        params: {
+          uid: uid,
+          fileName: fileName
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + idToken
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return []
+    }
+};
+
   useEffect(() => {
     const fetchChatHistory = async () => {
       if (auth.currentUser) {
-        const conversationsRef = collection(
-          db,
-          'users',
-          auth.currentUser.uid,
-          'conversations'
-        );
-        const conversationQuery = query(
-          conversationsRef,
-          where('fileName', '==', fileName),
-          limit(1)
-        );
-        const matchingConversations = await getDocs(conversationQuery);
-  
-        if (!matchingConversations.empty) {
-          const conversationId = matchingConversations.docs[0].id;
-          const messagesRef = collection(
-            conversationsRef,
-            conversationId,
-            'messages'
-          );
-          const messagesSnapshot = await getDocs(messagesRef);
-  
-          const messages = messagesSnapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-              type: data.sender,
-              text: data.text,
-              timestamp: new Date(data.timestamp)
-            };
-          });
-  
-          messages.sort((a, b) => a.timestamp - b.timestamp);
-          const sortedMessages = messages.map(({ type, text }) => ({ type, text }));
-          setChatHistory(sortedMessages);
-        }
+        const sortedMessages = await fetchConversationMessages(auth.currentUser.uid, fileName.replace(/ /g, '_'));
+        console.log(sortedMessages)
+        setChatHistory(sortedMessages);
       }
     };
     fetchChatHistory();
@@ -217,10 +204,16 @@ function ChatBox({fileName}) {
     setNewMessage('');
     setBackendTyping(true)
     setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
-    saveChatMessage(message);
+    // saveChatMessage(message);
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_'), });
+      const idToken = await auth.currentUser.getIdToken(true);
+      const response = await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_')},
+      {
+        headers: {
+          'Authorization': 'Bearer ' + idToken
+        }
+      });
       const backendResponse = {
         type: 'backend',
         text: response.data.answer,
@@ -228,7 +221,7 @@ function ChatBox({fileName}) {
 
       setChatHistory((prevChatHistory) => [...prevChatHistory, backendResponse]);
       setBackendTyping(false);
-      saveChatMessage(backendResponse)
+      //saveChatMessage(backendResponse)
     } catch (error) {
       setBackendTyping(false);
     }

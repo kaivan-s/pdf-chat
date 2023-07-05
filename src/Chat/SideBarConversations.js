@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useConversations from './UseConversations';
 import DragAndDropInput from '../Chat/DragAndDropInput'
 import axios from 'axios';
+import moment from 'moment';
 
 
 function SidebarConversationList() {
@@ -86,7 +87,12 @@ function SidebarConversationList() {
           sx={{ border: '1px dotted', borderRadius: 1, padding: 1, margin: 1, cursor: 'pointer', bgcolor: conversation.fileName === fileName ? 'black' : 'rgba(0, 0, 0, 0.1)'}}>
           <Typography sx={{color:conversation.fileName === fileName ? 'white' : 'black',}} variant="subtitle1">{conversation.fileName}</Typography>
           <Typography sx={{color:conversation.fileName === fileName ? 'white' : 'black'}} variant="caption">
-            {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit',}).format(conversation.latestMessage.timestamp)}
+          {
+                  (() => {
+                    const date = moment(conversation.latestMessage.timestamp, 'MMMM DD, YYYY at hh:mm:ss A Z');
+                    return date.format('MMM DD, YYYY, hh:mm A');
+                  })()
+          }
           </Typography>
         </Box>
       ))}
