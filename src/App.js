@@ -22,6 +22,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
+
       setLoading(false);
     });
     return () => unsubscribe();
@@ -47,10 +48,10 @@ function App() {
               <Grid item xs={12} md={6} sx={{ backgroundColor: "darkgray" }}>
                 <Routes>
                   <Route path="/register" element={<Register />} />
-                  <Route path="/login" element={<Login setUser={setUser} />} />
+                  <Route path="/login" element={<Login user={user} />} />
                   <Route path="/resend-verification" element={<ResendVerification />} />
-                  <Route index element={<Login setUser={setUser} />} />
-                  <Route path="/pricing" element={<Pricing setUser={setUser} />} />
+                  <Route index element={<Login user={user} />} />
+                  <Route path="/pricing" element={<Pricing user={user} />} />
                 </Routes>
               </Grid>
             </>
@@ -59,9 +60,9 @@ function App() {
               <Grid item xs={12}>
                 <Routes>
                   <Route path="/chat/:fileName" element={<ChatPage />} />
-                  <Route path="/" element={<Home setUser={setUser} />} />
-                  <Route path="/pricing" element={<Pricing setUser={setUser} />} />
-                  <Route path="/account" element={<Account setUser={setUser} />} />
+                  <Route path="/" element={<Home user={user} />} />
+                  <Route path="/pricing" element={<Pricing user={user}/>} />
+                  <Route path="/account" element={<Account user={user} />} />
                 </Routes>
               </Grid>
             </>

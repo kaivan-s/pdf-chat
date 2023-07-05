@@ -150,35 +150,6 @@ function ChatBox({fileName}) {
     },
   }));
 
-  const saveChatMessage = async (message) => {
-    if (auth.currentUser) {
-      const conversationsRef = collection(db, 'users', auth.currentUser.uid, 'conversations');
-      const conversationQuery = query(conversationsRef, where('fileName', '==', fileName), limit(1));
-      const matchingConversations = await getDocs(conversationQuery);
-      let conversationId;
-  
-      if (matchingConversations.empty) {
-        // create a new conversation document
-        const newConversationRef = await addDoc(conversationsRef, {
-          fileName: fileName
-        });
-        conversationId = newConversationRef.id;
-      } else {
-        conversationId = matchingConversations.docs[0].id;
-      }
-  
-      const messagesRef = collection(conversationsRef, conversationId, 'messages');
-      await addDoc(messagesRef, {
-        text: message.text,
-        sender: message.type,
-        timestamp: new Date().getTime()
-      });
-    } else {
-      console.error('User not logged in');
-    }
-  }
-  
-
   const handleNewMessageChange = (e) => {
     setNewMessage(e.target.value);
   };

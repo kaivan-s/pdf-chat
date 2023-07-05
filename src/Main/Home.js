@@ -34,6 +34,7 @@ function Home({user}) {
       useEffect(() => {
         async function protect() {
             const user = auth.currentUser;
+            console.log(user)
             if (user) {
                 const isSubscribed = await getUserSubscription(user);
                 if (!isSubscribed) {
