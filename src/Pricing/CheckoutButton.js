@@ -9,7 +9,7 @@ const stripePromise = loadStripe('pk_live_51N3ffVSDnmZGzrWBx6p7GTDHIIZPj8CkQgVe1
 const CheckoutButton = () => {
   const handleClick = async (event) => {
     const stripe = await stripePromise;
-    const response = await fetch('http://15.207.103.224:8501/create-checkout-session', {
+    const response = await fetch('https://15.207.103.224:443/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
