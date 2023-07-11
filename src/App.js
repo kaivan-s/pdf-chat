@@ -13,7 +13,6 @@ import Pricing from './Pricing/Pricing';
 import Account from './Account/Account';
 import DocumentChat from './Images/DocumentChat.png'
 import ResendVerification from './Authentication/ResentVerification';
-import { Dashboard } from './Dashboard/dashboard'
 
 function App() {
   const [user, setUser] = useState(null);
@@ -79,18 +78,15 @@ function LeftColumn() {
 
   let title;
   let message;
-  let linkText;
   let linkPath;
 
   if (location.pathname === '/register') {
     title = 'Already an User? ';
     message = 'Login Here';
-    linkText = 'Login';
     linkPath = '/login';
   } else {
     title = 'New User? ';
     message = 'Register Here';
-    linkText = 'Register';
     linkPath = '/register';
   }
 

@@ -7,12 +7,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SendIcon from '@mui/icons-material/Send';
 import { useTheme } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { db, auth } from '../Firebase/firebase'
+import { auth } from '../Firebase/firebase'
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import deleteChat from '../Utilities/DeleteConversation'
-import { getDocs, where, limit, collection, addDoc, query } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import ChatBackground from '../Images/ChatBackground.jpeg'
 import SmartToyIcon from '@mui/icons-material/SmartToy';

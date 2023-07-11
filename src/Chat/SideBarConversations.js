@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, storage } from '../Firebase/firebase'
 import { ref, uploadBytes } from 'firebase/storage';
-import { Box, Typography, Divider, LinearProgress, TextField, Container, Link } from '@mui/material';
+import { Box, Typography, Divider, LinearProgress, TextField, Link } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import useConversations from './UseConversations';
 import DragAndDropInput from '../Chat/DragAndDropInput'

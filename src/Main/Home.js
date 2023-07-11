@@ -20,7 +20,6 @@ function Home({user}) {
 
     const navigate = useNavigate();
     const [fileName, setFileName] = useState('');
-    const [file, setFile] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [uploadSuccess, setUploadSucess] = useState(null)
@@ -50,7 +49,6 @@ function Home({user}) {
     const handleFileChange = (file) => {
 
         setFileName(file.name || '');
-        setFile(file);
         setUploadSucess(null);
         handleSubmit(file, file.name);
     };

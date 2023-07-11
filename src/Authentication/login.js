@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import GoogleLogo from '../Images/GoogleIcon.png';
 import { googleSignIn } from "../Firebase/Google/GoogleAuthenticator";
-import AuthProviderButtons from "../Firebase/Authenticator/AuthProvider";
 
 function Login() {
 

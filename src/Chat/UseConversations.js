@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { auth, db } from '../Firebase/firebase';
+import { auth } from '../Firebase/firebase';
 import axios from 'axios';
-import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 
 function useConversations(deletedConversationId) {
   const [conversations, setConversations] = useState([]);
