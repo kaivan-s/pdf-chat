@@ -2,13 +2,21 @@ import React from 'react';
 import { Button, Box, Typography, List, ListItem, ListItemText, ListItemIcon } from '@mui/material'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { loadStripe } from '@stripe/stripe-js';
+import { auth } from '../Firebase/firebase'
 
 const stripePromise = loadStripe('pk_live_51N3ffVSDnmZGzrWBx6p7GTDHIIZPj8CkQgVe1no0O9CQ7qPPUEUy6qCr7YHN4BoKoid1sW27PmrAP1xBDHPNXrsf008jq9Jb5x');
 
 const CheckoutButton = () => {
   const handleClick = async (event) => {
     const stripe = await stripePromise;
-    const response = await fetch('http://127.0.0.1:5000/create-checkout-session', { method: 'POST' });
+    const response = await fetch('http://15.207.103.224:8501/create-checkout-session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uid: auth.currentUser.uid }),  // Replace `uid` with the actual uid variable
+    });
+    console.log(response)
 
     const session = await response.json();
     const result = await stripe.redirectToCheckout({

@@ -35,7 +35,7 @@ function ChatBox({fileName}) {
   const fetchConversationMessages = async (uid, fileName) => {
     try {
       const idToken = await auth.currentUser.getIdToken(true);
-      const response = await axios.get('http://127.0.0.1:5000/api/conversations/messages', {
+      const response = await axios.get('http://15.207.103.224:8501/api/conversations/messages', {
         params: {
           uid: uid,
           fileName: fileName
