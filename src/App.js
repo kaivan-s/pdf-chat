@@ -9,8 +9,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import ChatPage from './Chat/ChatPage';
-import Pricing from './Pricing/Pricing';
 import Account from './Account/Account';
+import LandingPage from './Landing/Landing';
 import DocumentChat from './Images/DocumentChat.png'
 import ResendVerification from './Authentication/ResentVerification';
 
@@ -50,7 +50,6 @@ function App() {
                   <Route path="/login" element={<Login user={user} />} />
                   <Route path="/resend-verification" element={<ResendVerification />} />
                   <Route index element={<Login user={user} />} />
-                  <Route path="/pricing" element={<Pricing user={user} />} />
                 </Routes>
               </Grid>
             </>
@@ -60,7 +59,7 @@ function App() {
                 <Routes>
                   <Route path="/chat/:fileName" element={<ChatPage />} />
                   <Route path="/" element={<Home user={user} />} />
-                  <Route path="/pricing" element={<Pricing user={user}/>} />
+                  <Route path="/landing" element={<LandingPage user={user}/>} />
                   <Route path="/account" element={<Account user={user} />} />
                 </Routes>
               </Grid>

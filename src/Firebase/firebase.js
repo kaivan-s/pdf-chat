@@ -3,12 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { doc, getDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBLjDnlP7iOZCtv7JKoVrdzEpz5FWzCuCs",
   authDomain: "pdf-chat-cc707.firebaseapp.com",
@@ -25,16 +20,18 @@ const auth = getAuth(app)
 const db = getFirestore(app)
 const storage = getStorage(app)
 
-export async function getUserSubscription(user) {
-  const docRef = doc(db, 'users', user.uid);
-  const docSnap = await getDoc(docRef);
+export async function getUserSubscriptionStatus(user) {
+  const idToken = await auth.currentUser.getIdToken(true);
+  const response = await fetch('http://127.0.0.1:5000/api/user/subscription', {
+    headers: { 'Authorization': 'Bearer ' + idToken},
+  });
 
-  if (docSnap.exists()) {
-    return docSnap.data().subscribed;
+  if (response.ok) {
+    return await response.json();
   } else {
-    console.log('No such document!');
-    return false;
+    console.error(`Error: ${response.status}`);
   }
 }
+
 
 export {auth, db, storage}

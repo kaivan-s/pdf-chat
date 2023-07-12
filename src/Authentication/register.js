@@ -45,9 +45,8 @@ function Register() {
       await sendEmailVerification(result.user)
       setLoading(false);
       setEmailSent(true);
-      // navigate('/');
+      navigate('/');
     } catch (err) {
-      console.log(err)
       setError(err.message);
       setLoading(false);
     }

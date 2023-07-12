@@ -14,7 +14,7 @@ import ConversationList from '../Chat/ConversationList';
 import { ref, uploadBytes } from 'firebase/storage';
 import { storage, auth } from '../Firebase/firebase';
 import Header from "../Header/header";
-import { getUserSubscription } from '../Firebase/firebase';
+import { getUserSubscriptionStatus } from '../Firebase/firebase';
 
 function Home({user}) {
 
@@ -33,10 +33,9 @@ function Home({user}) {
       useEffect(() => {
         async function protect() {
             const user = auth.currentUser;
-            console.log(user)
             if (user) {
-                const isSubscribed = await getUserSubscription(user);
-                if (!isSubscribed) {
+                const isSubscribed = await getUserSubscriptionStatus(user);
+                if (!isSubscribed['subscribed'] === true) {
                     navigate('/landing')
                 }
             } else {

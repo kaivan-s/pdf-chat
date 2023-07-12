@@ -34,7 +34,7 @@ function ChatBox({fileName}) {
   const fetchConversationMessages = async (uid, fileName) => {
     try {
       const idToken = await auth.currentUser.getIdToken(true);
-      const response = await axios.get('http://15.207.103.224:8501/api/conversations/messages', {
+      const response = await axios.get('http://127.0.0.1:5000/api/conversations/messages', {
         params: {
           uid: uid,
           fileName: fileName
@@ -54,7 +54,6 @@ function ChatBox({fileName}) {
     const fetchChatHistory = async () => {
       if (auth.currentUser) {
         const sortedMessages = await fetchConversationMessages(auth.currentUser.uid, fileName.replace(/ /g, '_'));
-        console.log(sortedMessages)
         setChatHistory(sortedMessages);
       }
     };
@@ -166,36 +165,62 @@ function ChatBox({fileName}) {
 
   const handleSendMessage = async () => {
     if (!newMessage) return;
-
+  
     const message = {
       type: 'user',
       text: newMessage,
     };
+  
     setNewMessage('');
     setBackendTyping(true)
     setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
-    // saveChatMessage(message);
-
+  
     try {
       const idToken = await auth.currentUser.getIdToken(true);
-      const response = await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_')},
+      await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_') },
       {
         headers: {
           'Authorization': 'Bearer ' + idToken
-        }
+        },
+        responseType: 'text'
       });
-      const backendResponse = {
-        type: 'backend',
-        text: response.data.answer,
+  
+      const eventSource = new EventSource('http://127.0.0.1:5000/api/chat/stream');
+  
+      eventSource.onmessage = (event) => {
+        const word = event.data;
+        setBackendTyping(false);
+        console.log(word);
+      
+        setChatHistory((chatHistory) => {
+          const newChatHistory = [...chatHistory];
+          let latestMessage = {...newChatHistory[newChatHistory.length - 1]};
+          if (latestMessage && latestMessage.type === 'backend') {
+            latestMessage.text += ' ' + word;
+            newChatHistory[newChatHistory.length - 1] = latestMessage;
+          } else {
+            latestMessage = {
+              type: 'backend',
+              text: word,
+            };
+            newChatHistory.push(latestMessage);
+          }
+      
+          return newChatHistory;
+        });
+        
+        scrollToBottom();  // scroll to bottom on every new message
       };
-
-      setChatHistory((prevChatHistory) => [...prevChatHistory, backendResponse]);
-      setBackendTyping(false);
-      //saveChatMessage(backendResponse)
+  
+      eventSource.onerror = () => {
+        setBackendTyping(false);
+        eventSource.close();
+      }
     } catch (error) {
       setBackendTyping(false);
     }
   };
+  
 
   const colorTheme = createTheme({
     palette: {
