@@ -15,7 +15,7 @@ const stripePromise = loadStripe('pk_live_51N3ffVSDnmZGzrWBx6p7GTDHIIZPj8CkQgVe1
 const CheckoutButton = () => {
   const handleClick = async (event) => {
     const stripe = await stripePromise;
-    const response = await fetch('http://127.0.0.1:5000/create-checkout-session', {
+    const response = await fetch('https://api.docchat.in/create-checkout-session', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

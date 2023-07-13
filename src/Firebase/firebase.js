@@ -22,7 +22,7 @@ const storage = getStorage(app)
 
 export async function getUserSubscriptionStatus(user) {
   const idToken = await auth.currentUser.getIdToken(true);
-  const response = await fetch('http://127.0.0.1:5000/api/user/subscription', {
+  const response = await fetch('https://api.docchat.in/api/user/subscription', {
     headers: { 'Authorization': 'Bearer ' + idToken},
   });
 
