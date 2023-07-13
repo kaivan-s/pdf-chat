@@ -49,6 +49,7 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/login" element={<Login user={user} />} />
                   <Route path="/resend-verification" element={<ResendVerification />} />
+                  <Route path="/landing" element={<LandingPage user={user}/>} />
                   <Route index element={<Login user={user} />} />
                 </Routes>
               </Grid>

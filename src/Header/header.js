@@ -24,7 +24,7 @@ const Header = ({ user }) => {
   };
 
   const handlePricing = () => {
-    navigate("/pricing")
+    navigate("/landing")
   }
 
   const handleAccount = () => {

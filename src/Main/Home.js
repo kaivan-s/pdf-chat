@@ -68,7 +68,7 @@ function Home({user}) {
         formData.append('pdf', uploadedFile);
     
         try {
-            await axios.post('http://127.0.0.1:5000/api/process-pdf', formData, {
+            await axios.post('https://api.docchat.in/api/process-pdf', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
           });
           const userId = auth.currentUser.uid;
