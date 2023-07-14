@@ -3,7 +3,7 @@ import { Button, Box } from '@mui/material';
 import { loadStripe } from '@stripe/stripe-js';
 import { auth } from '../Firebase/firebase';
 
-const stripePromise = loadStripe('pk_live_51N3ffVSDnmZGzrWBx6p7GTDHIIZPj8CkQgVe1no0O9CQ7qPPUEUy6qCr7YHN4BoKoid1sW27PmrAP1xBDHPNXrsf008jq9Jb5x');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 
 // const featureList = [
 //   'Chat with unlimited documents.',

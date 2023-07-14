@@ -8,7 +8,7 @@ function useConversations(deletedConversationId) {
   const fetchConversations = async () => {
     try {
       const idToken = await auth.currentUser.getIdToken(true);
-      const response = await axios.get('http://127.0.0.1:5000/api/conversations', {
+      const response = await axios.get('https://api.docchat.in/api/conversations', {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + idToken

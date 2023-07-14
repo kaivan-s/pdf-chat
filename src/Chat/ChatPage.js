@@ -32,7 +32,7 @@ function ChatPage() {
     const fileRef = ref(storage, `pdfs/${userId}/${file}`);
     getDownloadURL(fileRef)
       .then((url) => {
-        const proxyUrl = `http://localhost:5001/pdf?url=${encodeURIComponent(url)}`;
+        const proxyUrl = `https://api.docchat.in/pdf?url=${encodeURIComponent(url)}`;
         setPdfURL(proxyUrl);
       })
       .catch((error) => {

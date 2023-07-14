@@ -46,7 +46,7 @@ function SidebarConversationList() {
             const formData = new FormData();
             formData.append('pdf', file);
     
-            await axios.post('http://127.0.0.1:5000/api/process-pdf', formData, {
+            await axios.post('https://api.docchat.in/api/process-pdf', formData, {
               headers: { 'Content-Type': 'multipart/form-data' },
             });
     

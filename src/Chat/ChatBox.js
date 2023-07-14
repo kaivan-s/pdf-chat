@@ -177,7 +177,7 @@ function ChatBox({fileName}) {
   
     try {
       const idToken = await auth.currentUser.getIdToken(true);
-      await axios.post('http://127.0.0.1:5000/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_') },
+      await axios.post('https://api.docchat.in/api/chat', { message: newMessage, backendFile: fileName.replace(/ /g, '_') },
       {
         headers: {
           'Authorization': 'Bearer ' + idToken
@@ -185,7 +185,7 @@ function ChatBox({fileName}) {
         responseType: 'text'
       });
   
-      const eventSource = new EventSource('http://127.0.0.1:5000/api/chat/stream');
+      const eventSource = new EventSource('https://api.docchat.in/api/chat/stream');
   
       eventSource.onmessage = (event) => {
         const word = event.data;
