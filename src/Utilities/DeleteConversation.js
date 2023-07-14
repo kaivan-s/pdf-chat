@@ -29,7 +29,7 @@ const deleteChat = async (fileName) => {
       const fileRef = ref(storage, `pdfs/${userId}/${fileName}`);
       await deleteObject(fileRef);
       await deleteDoc(conversationRef);
-      await axios.post('http://127.0.0.1:5000/api/delete-conversation', { pdf_file: fileName.replace(/ /g, '_')});
+      await axios.post('https://api.docchat.in/api/delete-conversation', { pdf_file: fileName.replace(/ /g, '_')});
 
       return true;
     }
