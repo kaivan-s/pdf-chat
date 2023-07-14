@@ -18,8 +18,6 @@ function ConversationList() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   conversations = useConversations(deletedConversationId);
 
-  console.log(conversations)
-
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };

@@ -153,12 +153,13 @@ function ChatBox({fileName}) {
   };
 
   const handleDeleteChat = async () => {
-    const success = await deleteChat(fileName);
-  
-    if (success) {
-      navigate("/")
-    } else {
-      console.error("Error deleting chat");
+    try {
+      const success = await deleteChat(fileName);
+      if (success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error deleting chat: ", error);
     }
   };
   
